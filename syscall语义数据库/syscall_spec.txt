@@ -1,0 +1,236 @@
+FVP syscall 语义数据库 - TXT 简表
+================================================================================
+总条目数: 174
+
+字段: name | group | argc | return_type | control_flow | affected_subsystems | status
+--------------------------------------------------------------------------------
+AudioLoad | Audio | 2 | Nil | - | bgm_player,vfs | implemented_in_rfvp_needs_game_coverage
+AudioPlay | Audio | 2 | Nil | - | bgm_player,vfs | implemented_in_rfvp_needs_game_coverage
+AudioSilentOn | Audio | 1 | Nil | - | bgm_player,vfs | implemented_in_rfvp_needs_game_coverage
+AudioState | Audio | 1 | BoolLike | - | bgm_player,vfs | implemented_in_rfvp_needs_game_coverage
+AudioStop | Audio | 2 | Nil | - | bgm_player,vfs | implemented_in_rfvp_needs_game_coverage
+AudioType | Audio | 2 | Nil | - | bgm_player,vfs | implemented_in_rfvp_needs_game_coverage
+AudioVol | Audio | 3 | Nil | - | bgm_player,vfs | implemented_in_rfvp_needs_game_coverage
+BREAKPOINT | Debug | 0 | Nil | - | logger/debug | implemented_in_rfvp_high_confidence
+ChrAdd | LegacyCharacter | 4 | Nil | - | legacy character table,color_manager | legacy_compatibility_partial
+ChrGetRGB | LegacyCharacter | 2 | Nil | - | legacy character table,color_manager | legacy_compatibility_partial
+ChrGetVol | LegacyCharacter | 1 | Int|Nil | - | legacy character table,color_manager | legacy_compatibility_partial
+ColorSet | Color | 5 | Nil | - | motion_manager.color_manager | implemented_in_rfvp_needs_game_coverage
+ConfigDisplay | LegacyConfig | 9 | Nil | - | legacy config state,bgm_player,se_player | legacy_compatibility_partial
+ConfigEtc | LegacyConfig | 3 | Nil | - | legacy config state,bgm_player,se_player | legacy_compatibility_partial
+ConfigSet | LegacyConfig | 0 | Nil | - | legacy config state,bgm_player,se_player | legacy_compatibility_partial
+ConfigSound | LegacyConfig | 5 | Nil | - | legacy config state,bgm_player,se_player | legacy_compatibility_partial
+ControlMask | Control | 1 | Nil | - | inputs_manager,scene fast-forward | needs_runtime_verification
+ControlPulse | Control | 0 | Nil | - | inputs_manager,scene fast-forward | needs_runtime_verification
+CursorChange | Cursor | 1 | Nil | - | window,inputs_manager,cursor_table | implemented_in_rfvp_needs_game_coverage
+CursorMove | Cursor | 3 | Nil | - | window,inputs_manager,cursor_table | implemented_in_rfvp_needs_game_coverage
+CursorShow | Cursor | 1 | Nil | - | window,inputs_manager,cursor_table | implemented_in_rfvp_needs_game_coverage
+Debmess | Debug | 2 | Nil | - | logger/debug | implemented_in_rfvp_high_confidence
+Dissolve | Dissolve | 7 | Nil | - | motion_manager.dissolve,thread_wrapper | implemented_in_rfvp_needs_game_coverage
+DissolveWait | Dissolve | 1 | Nil | yield,dissolve_wait | motion_manager.dissolve,thread_wrapper | implemented_in_rfvp_needs_game_coverage
+ExitDialog | Exit | 0 | Nil | yield | GameData.lifecycle,thread_wrapper | implemented_in_rfvp_high_confidence
+ExitMode | Exit | 1 | BoolLike|Nil | yield | GameData.lifecycle,thread_wrapper | implemented_in_rfvp_high_confidence
+FlagGet | Flag | 1 | BoolLike | - | flag_manager | implemented_in_rfvp_high_confidence
+FlagSet | Flag | 2 | Nil | - | flag_manager | implemented_in_rfvp_high_confidence
+FloatToInt | Utils | 1 | Int | - | VM utility only | implemented_in_rfvp_high_confidence
+GaijiLoad | Gaiji | 3 | Nil | - | motion_manager.gaiji_manager,text_manager,vfs | implemented_in_rfvp_needs_game_coverage
+GraphLoad | Graph | 2 | Nil | - | motion_manager.graph_buff,texture cache,vfs | implemented_in_rfvp_needs_game_coverage
+GraphRGB | Graph | 4 | Nil | - | motion_manager.graph_buff,texture cache,vfs | implemented_in_rfvp_needs_game_coverage
+HistoryGet | History | 2 | Mixed<Int|String|Nil> | - | history_manager | implemented_in_rfvp_high_confidence
+HistorySet | History | 2 | Nil | - | history_manager | implemented_in_rfvp_high_confidence
+InputFlash | Input | 0 | Nil | - | inputs_manager | implemented_in_rfvp_high_confidence
+InputGetCursIn | Input | 0 | BoolLike | - | inputs_manager | implemented_in_rfvp_high_confidence
+InputGetCursX | Input | 0 | Int | - | inputs_manager | implemented_in_rfvp_high_confidence
+InputGetCursY | Input | 0 | Int | - | inputs_manager | implemented_in_rfvp_high_confidence
+InputGetDown | Input | 0 | Int | - | inputs_manager | implemented_in_rfvp_high_confidence
+InputGetEvent | Input | 0 | Table|Nil | - | inputs_manager | implemented_in_rfvp_high_confidence
+InputGetRepeat | Input | 0 | Int | - | inputs_manager | implemented_in_rfvp_high_confidence
+InputGetState | Input | 0 | Int | - | inputs_manager | implemented_in_rfvp_high_confidence
+InputGetUp | Input | 0 | Int | - | inputs_manager | implemented_in_rfvp_high_confidence
+InputGetWheel | Input | 0 | Int | - | inputs_manager | implemented_in_rfvp_high_confidence
+InputSetClick | Input | 1 | Nil | - | inputs_manager | implemented_in_rfvp_high_confidence
+IntToText | Utils | 2 | String|Nil | - | VM utility only | implemented_in_rfvp_high_confidence
+LipAnim | Lip | 8 | Nil | - | motion_manager.lip | implemented_in_rfvp_needs_game_coverage
+LipSync | Lip | 2 | Nil | - | motion_manager.lip | implemented_in_rfvp_needs_game_coverage
+Load | Load | 1 | Nil | yield,dissolve_wait | unknown | needs_runtime_verification
+LoadFile | Save | 0 | Nil | yield | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+LoadQuick | Save | 1 | Nil | yield | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+LoadTitle | Save | 0 | Nil | - | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+MenuMessSkip | Menu | 1 | Nil | - | unknown | needs_runtime_verification
+MotionAlpha | Motion | 6 | Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionAlphaStop | Motion | 1 | Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionAlphaTest | Motion | 1 | BoolLike|Int|Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionAnim | Motion | 4 | Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionAnimStop | Motion | 1 | Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionAnimTest | Motion | 1 | Int | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionMove | Motion | 8 | Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionMoveR | Motion | 6 | Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionMoveRStop | Motion | 1 | Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionMoveRTest | Motion | 1 | BoolLike|Int|Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionMoveS2 | Motion | 8 | Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionMoveS2Stop | Motion | 1 | Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionMoveS2Test | Motion | 1 | BoolLike|Int|Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionMoveStop | Motion | 1 | Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionMoveTest | Motion | 1 | BoolLike|Int|Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionMoveZ | Motion | 6 | Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionMoveZStop | Motion | 1 | Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionMoveZTest | Motion | 1 | BoolLike|Int|Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+MotionPause | Motion | 2 | Int|Nil | - | motion_manager,prim_manager | implemented_in_rfvp_needs_game_coverage
+Movie | Movie | 2 | BoolLike | yield,halt | video_manager,motion_manager,audio_manager,vfs,GameData.halt | implemented_in_rfvp_high_confidence
+MoviePlay | Movie | 2 | BoolLike | yield,halt | video_manager,motion_manager,audio_manager,vfs,GameData.halt | implemented_in_rfvp_high_confidence
+MovieState | Movie | 1 | BoolLike | - | video_manager,motion_manager,audio_manager,vfs,GameData.halt | implemented_in_rfvp_high_confidence
+MovieStop | Movie | 0 | Nil | - | video_manager,motion_manager,audio_manager,vfs,GameData.halt | implemented_in_rfvp_high_confidence
+PartsAssign | Parts | 2 | Nil | - | motion_manager.parts_manager | implemented_in_rfvp_needs_game_coverage
+PartsLoad | Parts | 2 | Nil | - | motion_manager.parts_manager | implemented_in_rfvp_needs_game_coverage
+PartsMotion | Parts | 3 | Nil | - | motion_manager.parts_manager | implemented_in_rfvp_needs_game_coverage
+PartsMotionPause | Parts | 2 | Nil | - | motion_manager.parts_manager | implemented_in_rfvp_needs_game_coverage
+PartsMotionStop | Parts | 1 | Nil | - | motion_manager.parts_manager | implemented_in_rfvp_needs_game_coverage
+PartsMotionTest | Parts | 1 | Int | - | motion_manager.parts_manager | implemented_in_rfvp_needs_game_coverage
+PartsRGB | Parts | 4 | Nil | - | motion_manager.parts_manager | implemented_in_rfvp_needs_game_coverage
+PartsSelect | Parts | 2 | Nil | - | motion_manager.parts_manager | implemented_in_rfvp_needs_game_coverage
+PrimExitGroup | Prim | 1 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimGroupIn | Prim | 2 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimGroupMove | Prim | 2 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimGroupOut | Prim | 1 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimHit | Prim | 2 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetAlpha | Prim | 2 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetBlend | Prim | 2 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetClip | Prim | 1 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetDraw | Prim | 2 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetNull | Prim | 1 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetOP | Prim | 3 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetRS | Prim | 3 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetRS2 | Prim | 4 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetSnow | Prim | 4 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetSprt | Prim | 4 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetText | Prim | 4 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetTile | Prim | 6 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetUV | Prim | 3 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetWH | Prim | 3 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetXY | Prim | 3 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+PrimSetZ | Prim | 2 | Nil | - | motion_manager.prim_manager,rendering | implemented_in_rfvp_needs_game_coverage
+QuickCopy | Save | 2 | Nil | - | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+QuickState | Save | 1 | BoolLike | - | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+Rand | Utils | 0 | Float | - | VM utility only | implemented_in_rfvp_high_confidence
+SaveCreate | Save | 2 | Nil | yield | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SaveData | Save | 3 | Mixed<Int|String|BoolLike|Nil> | yield | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SaveFile | Save | 0 | Nil | yield | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SaveLoadMenu | Save | 1 | Nil | - | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SaveName | Save | 2 | Nil | - | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SaveQuick | Save | 1 | Nil | yield | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SaveThumbSize | Save | 2 | Nil | - | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SaveTitle | Save | 0 | Nil | - | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SaveWrite | Save | 1 | Nil | - | save_manager,thread_wrapper,motion_manager,vfs | implemented_in_rfvp_needs_game_coverage
+Snow | Snow | 18 | Nil | - | motion_manager.snow | implemented_in_rfvp_needs_game_coverage
+SnowStart | Snow | 1 | Nil | - | motion_manager.snow | implemented_in_rfvp_needs_game_coverage
+SnowStop | Snow | 1 | Nil | - | motion_manager.snow | implemented_in_rfvp_needs_game_coverage
+SoundLoad | Sound | 2 | Nil | - | se_player,audio_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SoundMasterVol | Sound | 1 | Nil | - | se_player,audio_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SoundPan | Sound | 2 | Nil | - | se_player,audio_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SoundPlay | Sound | 3 | Nil | - | se_player,audio_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SoundSilentOn | Sound | 1 | Nil | - | se_player,audio_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SoundStop | Sound | 2 | Nil | - | se_player,audio_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SoundType | Sound | 2 | Nil | - | se_player,audio_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SoundTypeVol | Sound | 2 | Nil | - | se_player,audio_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SoundVol | Sound | 3 | Nil | - | se_player,audio_manager,vfs | implemented_in_rfvp_needs_game_coverage
+SysAtSkipName | System | 2 | Nil | - | system/path | needs_runtime_verification
+SysProjFolder | System | 1 | Nil | - | system/path | needs_runtime_verification
+TextBuff | Text | 3 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextClear | Text | 1 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextColor | Text | 4 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextDataGet | Text | 3 | Mixed | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextDataSet | Text | 3 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextFont | Text | 3 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextFontCount | Text | 0 | Int | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextFontGet | Text | 0 | Int | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextFontName | Text | 1 | String|Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextFontSet | Text | 1 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextFormat | Text | 7 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextFunction | Text | 4 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextHistory | Text | 4 | Int|Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextHyphenation | Text | 3 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextOutSize | Text | 3 | Mixed | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextPause | Text | 2 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextPos | Text | 3 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextPrint | Text | 2 | Nil | yield,text_wait | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextRepaint | Text | 0 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextReprint | Text | 0 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextShadowDist | Text | 2 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextSize | Text | 3 | Mixed | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextSkip | Text | 2 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextSpace | Text | 3 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextSpeed | Text | 2 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextSuspendChr | Text | 2 | Nil | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+TextTest | Text | 1 | BoolLike | - | motion_manager.text_manager,fontface_manager,motion_manager.graph/texture | implemented_in_rfvp_needs_game_coverage
+ThreadExit | Thread | 1 | Nil | exits_context | thread_wrapper,thread_manager | implemented_in_rfvp_high_confidence
+ThreadNext | Thread | 0 | Nil | yield | thread_wrapper,thread_manager | implemented_in_rfvp_high_confidence
+ThreadRaise | Thread | 1 | Nil | - | thread_wrapper,thread_manager | implemented_in_rfvp_high_confidence
+ThreadSleep | Thread | 1 | Nil | yield,sleep | thread_wrapper,thread_manager | implemented_in_rfvp_high_confidence
+ThreadStart | Thread | 2 | Nil | starts_context | thread_wrapper,thread_manager | implemented_in_rfvp_high_confidence
+ThreadWait | Thread | 1 | Nil | yield,wait | thread_wrapper,thread_manager | implemented_in_rfvp_high_confidence
+TimerGet | Timer | 2 | Int | - | timer_manager | implemented_in_rfvp_high_confidence
+TimerSet | Timer | 2 | Nil | - | timer_manager | implemented_in_rfvp_high_confidence
+TimerSuspend | Timer | 1 | Nil | - | timer_manager | implemented_in_rfvp_high_confidence
+TitleMenu | Title | 1 | Nil | - | title/menu state | needs_runtime_verification
+V3DMotion | V3D | 6 | Nil | - | motion_manager.v3d | implemented_in_rfvp_needs_game_coverage
+V3DMotionPause | V3D | 1 | Int|Nil | - | motion_manager.v3d | implemented_in_rfvp_needs_game_coverage
+V3DMotionStop | V3D | 0 | Nil | - | motion_manager.v3d | implemented_in_rfvp_needs_game_coverage
+V3DMotionTest | V3D | 0 | BoolLike | - | motion_manager.v3d | implemented_in_rfvp_needs_game_coverage
+V3DSet | V3D | 3 | Nil | - | motion_manager.v3d | implemented_in_rfvp_needs_game_coverage
+WindowMode | Window | 1 | Mixed<Int|BoolLike|Nil> | - | window,GameData.window/lifecycle flags | implemented_in_rfvp_high_confidence
+
+按分组统计
+--------------------------------------------------------------------------------
+Audio: 7
+Color: 1
+Control: 2
+Cursor: 3
+Debug: 2
+Dissolve: 2
+Exit: 2
+Flag: 2
+Gaiji: 1
+Graph: 2
+History: 2
+Input: 11
+LegacyCharacter: 3
+LegacyConfig: 4
+Lip: 2
+Load: 1
+Menu: 1
+Motion: 19
+Movie: 4
+Parts: 8
+Prim: 21
+Save: 14
+Snow: 3
+Sound: 9
+System: 2
+Text: 27
+Thread: 6
+Timer: 3
+Title: 1
+Utils: 3
+V3D: 5
+Window: 1
+
+存在 VM 调度副作用的 syscall
+--------------------------------------------------------------------------------
+DissolveWait: non-nil argument blocks until dissolve completes if transition active
+ExitDialog: requests exit dialog and breaks current context
+ExitMode: mode=3 locks scripter and breaks current context
+Load: requests load at safe point and waits for dissolve/load transition
+LoadFile: legacy UI request; breaks context
+LoadQuick: delegates load path
+Movie: modal movie sets halt and breaks current context; layer movie does not
+MoviePlay: legacy alias of Movie; modal mode halts
+SaveCreate: fnid=3 requests local save capture and should_break
+SaveData: some save-data operations request prepare-local-savedata and break
+SaveFile: legacy UI request; prepares save and breaks context
+SaveQuick: delegates save path
+TextPrint: may arm text reveal wait and break current context
+ThreadExit: requests context termination
+ThreadNext: requests ThreadNext; current context yields for scheduler turn
+ThreadSleep: sets SLEEP status until raised/unblocked
+ThreadStart: starts/replaces a script context by id
+ThreadWait: sets WAIT status until timer expires
