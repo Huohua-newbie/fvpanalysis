@@ -1,0 +1,334 @@
+Sakura 立绘相关 KS 宏与 HCB 函数对照（Shift-JIS 全量扫描）
+============================================================
+
+生成依据
+--------
+
+1. 扫描范围：fvp_analysis/reference/SakuraMoyu_NS 下全部 8 个 .ks 文件。
+2. 读取方式：按 Shift-JIS / CP932（编码页 932）解码。
+3. 检索式：macro name="$chara
+4. 命中总数：9817。
+5. 宏名总数：6。
+
+本文件中的“实际参数序号”均按 HCB VM 的真实压栈顺序说明。
+Lua-like 导出器存在参数名整体偏移；不要将反编译函数头中的 a0/a1... 直接当成最终参数编号。
+
+
+一、扫描到的全部 $chara* 宏
+----------------------------
+
+宏名              次数    当前映射状态
+----------------------------------------------------------
+$chara             8792    高可信：f_00058B8C（立绘登记/加载/更新总入口）
+$chara_anim          317    高可信候选：f_0006996D（PartsMotion 部件动画/帧切换包装器）；尚待逐条定位确认
+$chara_color          84    高可信：f_00069F71（立绘颜色缓存写入器）
+$chara_delete        487    高可信：f_00060433 -> f_0005FE1E（立绘离场/删除登记器）
+$chara_disp          111    高可信：f_00060441 -> f_00060795 -> f_00066CB2（立绘批量显示/刷新器）
+$chara_move           26    高可信：f_00068C85（单槽位 XY/Z/旋转运动器）
+
+重要扫描结论：
+
+- 所有 KS 中没有发现独立命名为 $chara_enter、$chara_in、$chara_show、$chara_appear 等“入场专用”宏。
+- 因此 Sakura 的立绘入场不是由另一条单独命名的宏完成，而是：
+
+  $chara：登记资源、初始构图、初始位置、层位、透明度、方向模式
+      ↓
+  $chara_disp：把已登记状态提交为 Graph/Parts 的 alpha、XY、Z、Parts motion
+
+- $chara_delete 与“入场”共用方向/位移模式缓存；前者登记离场状态，$chara 则登记入场或构图状态。
+- $chara_disp 的 #disp 只提供位移幅度，入场/离场方向由此前 $chara / $chara_delete 写入的模式决定。
+
+
+二、$chara：立绘登记/加载/更新总入口
+-------------------------------------
+
+HCB 对应：f_00058B8C
+相关资料：f_00058B8C立绘引入参数解析.md
+
+定位：
+
+- 根据角色、姿态、服装、细分表情，拼接并加载 Parts 立绘资源。
+- 建立/更新角色逻辑槽位、Graph/Parts 绑定、构图、位置、Z、缩放、透明度和部件状态。
+- 通常不单独完成最终的“显示运动”；需由后续 $chara_disp 统一提交。
+
+KS 常见属性（已知/高可信部分）：
+
+属性       含义
+----------------------------------------------------------
+#cname     角色名；宏层根据角色名查出立绘逻辑槽位/角色资源组。
+#file      立绘资源族名；影响实际 Parts 资源路径。
+#body      服装/派生立绘配置；影响资源组合。
+#face      细分表情/部件条目；最终对应 PartsSelect 的条目选择。
+#l         构图/层位模式；底层对应动态构图状态，-10 为清除路径。
+#z         初始/目标 Z 构图深度。
+#x/#y      初始构图坐标或位置基准。
+#lyr       构图层位/演出层位选择，参与角色槽位/显示布局。
+#a         透明度相关动态参数；当前可确认会参与立绘 alpha 状态设置。
+#d         附属显示/第二层联动相关开关；存在实际样例，但精确业务命名仍需继续验证。
+
+HCB 核心实际参数（按既有分析）：
+
+1. 角色/立绘资源组编号。
+2. 基础姿态/表情组编号。
+3. 服装/派生立绘编号。
+4. PartsSelect 使用的细分表情/部件条目编号。
+5. 构图/层位模式；-10 表示清除当前立绘路径。
+6. 横向站位预设。
+7. 辅助项（当前主干中低置信）。
+8. 基础 Z。
+9. 辅助项（当前主干中低置信）。
+10. Y 微调。
+11. X 微调。
+12. 附属演出状态编号。
+13. alpha/透明度相关参数。
+14. 第二层 alpha 联动相关参数。
+
+关于入场：
+
+$chara 是入场状态的“登记端”。它会把当前角色的构图、位置和初始显示状态写入相应缓存；真正的淡入、位移、Parts motion 通常在随后 $chara_disp 中执行。
+
+示例：
+
+[macro name="$chara" #cname="..." #file="..." #body="..." #face="..." #l="..." #z="..." #x="..." #y="..." #lyr="..."]
+[macro name="$chara_disp" #time="..."]
+
+
+三、$chara_disp：批量显示/刷新/入场离场提交器
+-------------------------------------------------
+
+HCB 对应：f_00060441
+下游：f_00060795 -> f_00066CB2
+相关资料：f_00060441详细解析修订版.md
+
+定位：
+
+- 不是狭义的“仅入场方式选择器”。
+- 是当前已登记立绘状态的批量提交点：可处理新立绘入场、已有立绘位置/颜色更新、Parts 更新、旧立绘离场和资源后处理。
+- $chara 可以连续调用多次后再调用一次 $chara_disp；因此它不是每个 $chara 的必需即时后缀。
+
+实际业务参数：
+
+实际序号    KS 属性       含义
+----------------------------------------------------------
+1           #time         Graph/prim 层 alpha、XY、Z 批处理的主要时序输入。
+                          普通正数按毫秒级演出时序理解；特殊状态下会被归一化。
+2           #time2        PartsMotion 的持续时间；nil 默认 200 ms。
+3           #disp         入场/离场方向模式所使用的 XY 位移幅度；nil 默认 150。
+4           （保留）      当前 f_00060441 不转发/不消费；通常为 nil。
+
+关键关系：
+
+- #time：影响主要立绘图元的运动/alpha 时序。
+- #time2：直接进入 PartsMotion 的 duration。
+- #disp：只提供位移幅度；不决定方向。
+- 方向：由 $chara 或 $chara_delete 事先写入的模式决定。
+
+示例：
+
+[macro name="$chara_disp" #time="1200"]
+[macro name="$chara_disp" #disp="250"]
+[macro name="$chara_disp" #time="600" #disp="250"]
+[macro name="$chara_disp" #time="-1" #time2="-1" #disp="500"]
+
+注意：time=-1/time2=-1 属于原作特殊哨兵用法，不能简单按负毫秒理解。
+
+
+四、$chara_delete：离场/删除登记器
+-----------------------------------
+
+HCB 对应：f_00060433 -> f_0005FE1E
+下游刷新：$chara_disp -> f_00060441 -> f_00060795 -> f_00066CB2
+相关资料：f_00060433详细解析.md
+
+定位：
+
+- 本身不立即删除资源，也不直接执行 alpha/移动。
+- 将目标角色逻辑槽位设为“删除待处理”状态（状态值 3）。
+- 可保存离场方向模式；后续 $chara_disp 才提交淡出/离场运动及资源回收。
+
+KS 参数：
+
+属性       含义
+----------------------------------------------------------
+#cname     要删除的角色名；宏层转换为立绘逻辑槽位编号。
+#param     离场位移方向模式；省略时等价于 0（无额外位移）。
+
+实际业务参数：
+
+实际序号    含义
+----------------------------------------------------------
+1           slot：目标立绘逻辑槽位。有效值为 0..19、21..24；20 无分支。
+2           exit_mode：离场位移方向模式。
+
+exit_mode 对照：
+
+0/nil  无附加位移；标准淡出/回收。
+1      +X 离场。
+2      -X 离场。
+3      +Y 离场。
+4      -Y 离场。
+5..8   XY 斜向离场。
+10..17 带固定 ±150 Z 偏移的组合离场。
+
+示例：
+
+[macro name="$chara_delete" #cname="..."]
+[macro name="$chara_disp"]
+
+[macro name="$chara_delete" #cname="..." #param="2"]
+[macro name="$chara_disp" #time="600" #disp="250"]
+
+第二个例子中：param=2 决定 -X 方向；disp=250 决定位移幅度。
+
+
+五、$chara_move：单立绘 XY/Z/旋转运动
+--------------------------------------
+
+HCB 对应：f_00068C85
+相关资料：f_00068C85详细解析.md
+
+定位：
+
+- 针对一个立绘逻辑槽位，同时控制其 Graph/Parts 相关的四个配对 prim。
+- 单独提交 XY、Z、旋转 motion；不负责 alpha。
+- 与 $chara_disp 不同，它是单槽位局部运动命令，不是全体角色的批量刷新器。
+
+KS 常见属性与实际参数：
+
+实际序号    KS 属性       含义
+----------------------------------------------------------
+1           #cname        角色名 -> 立绘逻辑槽位 slot。
+2           #x            X 相对位移 dx；nil 默认 0。
+3           #y            Y 相对位移 dy；nil 默认 0。
+4           #z            目标 Z；非相对增量；nil 时不提交 Z motion。
+5           #r            目标旋转角；nil 时不提交旋转 motion。
+6           #t            XY/Z/旋转共同持续时间；nil 默认 500 ms。
+7           （未见常用宏属性） Motion easing/type；nil 默认 3。
+8           （未见常用宏属性） wait；1 时轮询运动完成，默认不等待。
+9           （未见常用宏属性） preflight；默认 1，控制 UI/输入/舞台前置处理。
+
+关键结论：
+
+- #x/#y 是移动距离（相对偏移），不是目标坐标。
+- #z/#r 是绝对目标值。
+- 本函数不调用 MotionAlpha；最后三个参数也没有 alpha 含义。
+
+示例：
+
+[macro name="$chara_move" #cname="..." #x="75" #t="500"]
+[macro name="$chara_move" #cname="..." #y="415" #t="1000"]
+
+
+六、$chara_color：立绘颜色缓存设置
+-----------------------------------
+
+HCB 对应：f_00069F71
+实际应用者：f_00060795（GraphRGB + PartsRGB）
+相关资料：f_00069F71详细解析.md
+
+定位：
+
+- 不是直接绘制颜色的函数，而是按立绘槽位写入 RGB 色调缓存。
+- 后续 $chara_disp / f_00060441 -> f_00060795 才将缓存同时应用到 GraphRGB 和 PartsRGB。
+- 同一缓存系统也被背景/过渡逻辑复用，所以不能把它理解为“仅立绘”函数。
+
+KS 参数：
+
+属性       含义
+----------------------------------------------------------
+#cname     角色名 -> 颜色缓存槽位 selector。
+#r         色调 R 参数。
+#g         色调 G 参数。
+#b         色调 B 参数。
+
+实际参数：
+
+实际序号    含义
+----------------------------------------------------------
+1           selector：颜色缓存选择器；有效单组 0..19、21..24；-1 是广播模板路径。
+2           r：红色/第一色调通道；nil 默认 100；-10 是特殊预设入口。
+3           g：绿色/第二色调通道；nil 默认 100。
+4           b：蓝色/第三色调通道；nil 默认 100。
+
+典型工作流：
+
+[macro name="$chara_color" #cname="..." #r="5" #g="5" #b="5"]
+[macro name="$chara_disp" #time="1300"]
+
+重要：单独调用颜色缓存设置不会保证画面立即变化；应接刷新链。
+
+
+七、$chara_anim：部件动画/帧切换（高可信候选，待最终定位）
+-------------------------------------------------------------
+
+高可信候选 HCB：f_0006996D
+底层 syscall：PartsMotion
+当前证据：
+
+- $chara_anim 在全 KS 中出现 317 次，常见参数为 #cname 和 #no。
+- f_0006996D 按逻辑槽位选择对应 Parts prim，再将第二实参写入 G[575]..G[598]。
+- f_0006996D 最终调用 PartsMotion(parts_id, entry_id, duration)。
+- 既有立绘引入分析确认 f_0006996D 是在角色基础构图不变时走的快速 PartsSelect/PartsMotion 路径。
+
+暂定宏参数解释：
+
+属性       当前推定含义
+----------------------------------------------------------
+#cname     角色名 -> 角色逻辑槽位/Parts 对象。
+#no        Parts 条目/动画编号；例如 1、2、3、4、11、106、108。
+
+f_0006996D 的实际参数（按当前代码）：
+
+1. slot：角色逻辑槽位。
+2. entry_id：Parts 条目/动画编号。
+3. duration：PartsMotion 时长；nil 默认 150 ms。
+4. wait：1 时等待 PartsMotion 完成；nil 默认 0。
+
+谨慎说明：
+
+- “$chara_anim -> f_0006996D”在功能和数据流上高度吻合。
+- 但当前尚未完成一个具体 $chara_anim 调用点与原 HCB 字节码位置的一对一定位，故本文件把该映射标为“高可信候选”，不写作最终绝对确认。
+
+
+八、关于立绘入场方式的当前结论
+--------------------------------
+
+问题：既然已找到 $chara_delete 的退场方向，是否存在同理的独立入场方式？
+
+答：在所有 Shift-JIS KS 文件中，没有找到独立的 $chara_enter / $chara_in 类宏。
+
+当前最合理的入场机制为：
+
+1. $chara 在载入时登记角色槽位、初始构图模式、位置、Z、alpha、层位及方向模式。
+2. $chara_disp 根据 #time/#time2/#disp 对全部待处理立绘统一提交 motion。
+3. f_00060795 根据各槽位状态分别执行 GraphRGB、PartsRGB、MotionAlpha、MotionMove、MotionMoveZ、PartsMotion。
+4. f_00066CB2 轮询、收束、重建或回收资源。
+
+也就是说：
+
+- 离场：$chara_delete 写入“状态=删除 + 离场方向模式”，随后 $chara_disp 执行。
+- 入场：$chara 写入“状态=显示/构图 + 入场/布局方向模式”，随后 $chara_disp 执行。
+- 移动：$chara_move 直接对指定角色提交局部 XY/Z/旋转 motion。
+
+尚未完成的研究点：
+
+- $chara 的哪一个宏属性或内部动态参数精确决定“入场方向模式”。
+- 不同 #l/#lyr/#a/#d 组合对 MotionAlpha 初始/终点、入场位移和第二层联动的影响矩阵。
+- 是否存在不以 $chara* 命名、但专门改写立绘入场状态的其他 KS 宏。
+
+
+九、主要证据文件
+----------------
+
+- fvp_analysis/result/hcbtool_test/f_00058B8C立绘引入参数解析.md
+- fvp_analysis/result/hcbtool_test/f_00060441详细解析修订版.md
+- fvp_analysis/result/hcbtool_test/f_00060433详细解析.md
+- fvp_analysis/result/hcbtool_test/f_00068C85详细解析.md
+- fvp_analysis/result/hcbtool_test/f_00069F71详细解析.md
+- fvp_analysis/result/hcbtool_test/Sakura_hcb_ir/Sakura/f_00058B8C.lua
+- fvp_analysis/result/hcbtool_test/Sakura_hcb_ir/Sakura/f_00060441.lua
+- fvp_analysis/result/hcbtool_test/Sakura_hcb_ir/Sakura/f_00060433.lua
+- fvp_analysis/result/hcbtool_test/Sakura_hcb_ir/Sakura/f_00068C85.lua
+- fvp_analysis/result/hcbtool_test/Sakura_hcb_ir/Sakura/f_00069F71.lua
+- fvp_analysis/result/hcbtool_test/Sakura_hcb_ir/Sakura/f_0006996D.lua
+- fvp_analysis/reference/SakuraMoyu_NS （全部 8 个 KS 文件，按 Shift-JIS 扫描）
