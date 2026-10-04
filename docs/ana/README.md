@@ -15,6 +15,10 @@
 | [07](./07-case-study-speak-functions.md) | 案例：SPEAK 函数族分析 | Sakura.hcb 说话人名系统逆向解析 |
 | [08](./08-case-study-logo-animation.md) | 案例：LOGO 演出分析 | f_00074DA5 图层运动逐步解析 |
 | [09](./09-roadmap.md) | 研究路线图 | 阶段划分、当前进展与后续方向 |
+| [10](./10-motion-interp-semantics.md) | Motion 插值精确语义与帧时钟 | 5 easing 公式/16ms 时钟/完成与停止语义（真机逐位验证） |
+| [11](./11-coldstart-boot-globals.md) | 冷启动与 boot 全局量 | `global1950` CG 门案、前缀选择器、状态差清单 |
+| [12](./12-case-study-cg-chain.md) | 案例：电车 CG 加载链 | `9611→…→225940`、190/191 槽、CG 登记表 |
+| [13](./13-methods-calltrace-stack.md) | 方法篇 | call 追踪、断点二分、负栈索引规则 |
 
 ## 关于这套笔记
 
