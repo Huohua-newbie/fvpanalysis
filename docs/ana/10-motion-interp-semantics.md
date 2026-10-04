@@ -51,8 +51,10 @@ V3D 注册**没有 src 参数**（src = 注册时 current），这点与 prim �
 
 - `duration`：必须 `Int` 且 `1..=300000`，否则整 op 无效（各系一致）。
 - `typ`：`MotionAlpha` 缺省/非法一律按 Linear；`Move/S2/Z/R/V3D` 要求显式 `Int` 且在枚举内（`typ=0/None` = 从不写，`Nil` = 整 op 扔掉）。
-- 回退：`Nil` 的 src/dst 回退到**当前值**（含 motion 插值中的值，不是上次指令值）。
+- 回退：`Nil` 的 src 回退到**当前值**（含 motion 插值中的值）；但 `MotionAlpha` 的 **`Nil` dst = 255（不透明），不是当前值**（rfvp 上游 `motion_alpha` 的 Nil→当前值在此与原版相悖，见下）。
 - V3D 只有 `Linear/Accelerate/Decelerate` 参与插值？否——V3D 枚举同样有 0..5（含 Rebound/Bounce），见 `v3d.rs`。
+
+> ⚠️ **勘误（2026-10-04，真机截图证实）**：Sakura 开场的 tachie 分镜四次同构 setup（`PrimSetSprt/GroupIn/OP/XY/Alpha0/淡入`），三次用 `MotionAlpha(pid,0,Nil,525)`、一次用显式 `MotionAlpha(pid,0,255,525)`。按"Nil→当前值"（此时恒为刚设的 0）三次淡入全是 0→0 死代码；但原版实机在 Nil 那次**显示了立绘**（`--ref-png` 对照：rfvp 显示无立绘、原版有）。结论：**原版 `MotionAlpha` 的 Nil dst ≡ 255**；Nil src 仍为当前值（`(_,Nil,0,365)` 的淡出行为符合此解释）。`Move/S2/Z/R` 系暂无反例，保持 Nil→当前值。
 
 ## 6. `Test` 与暂停门
 
